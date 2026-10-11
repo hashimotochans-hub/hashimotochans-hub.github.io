@@ -1,0 +1,893 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title id="meta-title">AutoSquatCounter - カメラで自動スクワットカウント</title>
+  <meta name="description" id="meta-desc" content="iPhoneのカメラの前に立つだけでスクワットを自動カウント。回数を数える作業から解放され、トレーニングに集中できます。映像や顔データは端末内のみで即時処理され、外部への送信・保存は一切行われません。">
+  <meta name="keywords" content="AutoSquatCounter, スクワット, 自動カウント, カウンター, 筋トレ, フィットネス, iOS, iPhone, Squat Counter, Workout">
+  
+  <!-- Apple Smart App Banner -->
+  <meta name="apple-itunes-app" content="app-id=6815116698">
+
+  <!-- OGP (SNSシェア設定) -->
+  <meta property="og:title" content="AutoSquatCounter - カメラで自動スクワットカウント">
+  <meta property="og:description" content="カメラの前に立つだけでスクワットを自動カウント。会員登録なしですぐに使えます。">
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://hashimotochans-hub.github.io/">
+  <meta property="og:image" content="https://hashimotochans-hub.github.io/app_icon.png">
+
+  <!-- 構造化データ (Google検索用リッチスニペット) -->
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "SoftwareApplication",
+    "name": "AutoSquatCounter",
+    "operatingSystem": "iOS",
+    "applicationCategory": "HealthApplication",
+    "offers": {
+      "@type": "Offer",
+      "price": "0",
+      "priceCurrency": "JPY"
+    },
+    "description": "iPhoneのカメラの前に立つだけでスクワットを自動カウントするヘルスケアアプリ。"
+  }
+  </script>
+
+  <!-- Google Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@500;600;700;800&family=Noto+Sans+JP:wght@400;500;700&display=swap" rel="stylesheet">
+
+  <style>
+    :root {
+      --bg: #fafbfc;
+      --surface: #ffffff;
+      --text-main: #090a0c;
+      --text-sub: #4b5563;
+      --text-light: #6b7280;
+      --border: rgba(0, 0, 0, 0.08);
+      --border-subtle: rgba(0, 0, 0, 0.04);
+      --primary: #0284c7;
+      --accent: #2563eb;
+      --radius-sm: 8px;
+      --radius-md: 16px;
+      --radius-lg: 24px;
+      --radius-full: 9999px;
+      --shadow-sm: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
+      --shadow-card: 0 4px 20px -2px rgba(0, 0, 0, 0.05);
+      --shadow-card-hover: 0 12px 28px -4px rgba(0, 0, 0, 0.09);
+      --shadow-device: 0 24px 48px -12px rgba(0, 0, 0, 0.16);
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    html {
+      scroll-behavior: smooth;
+    }
+
+    body {
+      font-family: 'Noto Sans JP', 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, sans-serif;
+      background-color: var(--bg);
+      color: var(--text-main);
+      line-height: 1.7;
+      -webkit-font-smoothing: antialiased;
+      overflow-x: hidden;
+    }
+
+    /* 固定ナビゲーションバー (Appleスタイル・ガラスモフィズム) */
+    .navbar {
+      position: sticky;
+      top: 0;
+      z-index: 100;
+      background: rgba(250, 251, 252, 0.85);
+      backdrop-filter: blur(20px);
+      -webkit-backdrop-filter: blur(20px);
+      border-bottom: 1px solid var(--border);
+    }
+
+    .nav-inner {
+      max-width: 1040px;
+      margin: 0 auto;
+      padding: 12px 24px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .nav-brand {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      text-decoration: none;
+      color: var(--text-main);
+    }
+
+    .nav-icon {
+      width: 32px;
+      height: 32px;
+      border-radius: 8px;
+      box-shadow: 0 2px 6px rgba(0, 0, 0, 0.08);
+    }
+
+    .nav-title {
+      font-family: 'Plus Jakarta Sans', sans-serif;
+      font-weight: 700;
+      font-size: 1.05rem;
+      letter-spacing: -0.02em;
+    }
+
+    .nav-actions {
+      display: flex;
+      align-items: center;
+      gap: 16px;
+    }
+
+    .nav-links {
+      display: flex;
+      gap: 20px;
+      list-style: none;
+    }
+
+    .nav-links a {
+      color: var(--text-sub);
+      text-decoration: none;
+      font-size: 0.9rem;
+      font-weight: 500;
+      transition: color 0.15s;
+    }
+
+    .nav-links a:hover {
+      color: var(--text-main);
+    }
+
+    /* 言語スイッチ */
+    .lang-switcher {
+      display: flex;
+      background: rgba(0, 0, 0, 0.05);
+      padding: 3px;
+      border-radius: var(--radius-full);
+      gap: 2px;
+    }
+
+    .lang-btn {
+      border: none;
+      background: transparent;
+      color: var(--text-light);
+      font-size: 0.78rem;
+      font-weight: 600;
+      padding: 4px 12px;
+      border-radius: var(--radius-full);
+      cursor: pointer;
+      transition: all 0.2s ease;
+    }
+
+    .lang-btn.active {
+      background: var(--surface);
+      color: var(--text-main);
+      box-shadow: 0 1px 3px rgba(0, 0, 0, 0.08);
+    }
+
+    .nav-btn-mini {
+      display: inline-flex;
+      align-items: center;
+      background: #000000;
+      color: #ffffff;
+      text-decoration: none;
+      font-size: 0.82rem;
+      font-weight: 600;
+      padding: 7px 16px;
+      border-radius: var(--radius-full);
+      transition: opacity 0.2s;
+    }
+
+    .nav-btn-mini:hover {
+      opacity: 0.85;
+    }
+
+    /* メインコンテナ */
+    .container {
+      max-width: 1040px;
+      margin: 0 auto;
+      padding: 0 24px;
+    }
+
+    /* ヒーローセクション */
+    .hero {
+      text-align: center;
+      padding: 56px 0 44px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
+
+    .hero-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      background: rgba(2, 132, 199, 0.08);
+      color: var(--primary);
+      font-size: 0.82rem;
+      font-weight: 700;
+      padding: 6px 14px;
+      border-radius: var(--radius-full);
+      margin-bottom: 24px;
+      letter-spacing: 0.02em;
+    }
+
+    .hero-badge svg {
+      width: 14px;
+      height: 14px;
+    }
+
+    .hero-icon-wrap {
+      margin-bottom: 24px;
+      display: inline-block;
+    }
+
+    .hero-icon {
+      width: 104px;
+      height: 104px;
+      border-radius: 24px;
+      box-shadow: 0 12px 28px -6px rgba(0, 0, 0, 0.14);
+      border: 1px solid rgba(0, 0, 0, 0.06);
+      transition: transform 0.25s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.25s;
+    }
+
+    .hero-icon:hover {
+      transform: translateY(-4px) scale(1.02);
+      box-shadow: 0 20px 36px -8px rgba(0, 0, 0, 0.2);
+    }
+
+    h1 {
+      font-family: 'Plus Jakarta Sans', 'Noto Sans JP', sans-serif;
+      font-size: 3rem;
+      font-weight: 800;
+      letter-spacing: -0.03em;
+      line-height: 1.15;
+      color: var(--text-main);
+      margin-bottom: 20px;
+    }
+
+    .subtitle {
+      font-size: 1.15rem;
+      color: var(--text-sub);
+      max-width: 620px;
+      margin: 0 auto 36px;
+      line-height: 1.7;
+    }
+
+    /* Apple公式風 Downloadボタン */
+    .app-store-button {
+      display: inline-flex;
+      align-items: center;
+      gap: 12px;
+      background: #000000;
+      color: #ffffff;
+      text-decoration: none;
+      padding: 12px 28px;
+      border-radius: 14px;
+      font-weight: 600;
+      font-size: 0.95rem;
+      box-shadow: 0 4px 14px rgba(0, 0, 0, 0.15);
+      transition: transform 0.2s, box-shadow 0.2s, opacity 0.2s;
+    }
+
+    .app-store-button:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 8px 20px rgba(0, 0, 0, 0.22);
+      opacity: 0.95;
+    }
+
+    .app-store-button svg {
+      width: 24px;
+      height: 24px;
+      fill: currentColor;
+    }
+
+    .btn-text-small {
+      display: block;
+      font-size: 0.68rem;
+      font-weight: 400;
+      letter-spacing: 0.04em;
+      opacity: 0.85;
+      line-height: 1;
+      text-align: left;
+    }
+
+    .btn-text-large {
+      display: block;
+      font-size: 1.1rem;
+      font-weight: 700;
+      letter-spacing: -0.01em;
+      line-height: 1.2;
+      text-align: left;
+    }
+
+    /* スクリーンショット ショーケース */
+    .showcase {
+      margin: 48px auto 80px;
+      text-align: center;
+    }
+
+    .showcase-grid {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      gap: 28px;
+      padding: 20px 0;
+    }
+
+    .showcase-item {
+      position: relative;
+      transition: transform 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+
+    .showcase-item.main {
+      z-index: 2;
+      transform: scale(1.05);
+    }
+
+    .showcase-item:hover {
+      transform: translateY(-8px) scale(1.08);
+      z-index: 3;
+    }
+
+    .showcase-item img {
+      width: 220px;
+      height: auto;
+      border-radius: 28px;
+      box-shadow: var(--shadow-device);
+      border: 4px solid #ffffff;
+      background: #f3f4f6;
+      display: block;
+    }
+
+    .showcase-label {
+      font-size: 0.85rem;
+      font-weight: 600;
+      color: var(--text-sub);
+      margin-top: 16px;
+    }
+
+    /* セクション共通 */
+    section {
+      padding: 64px 0;
+      border-top: 1px solid var(--border-subtle);
+    }
+
+    .section-header {
+      text-align: center;
+      max-width: 600px;
+      margin: 0 auto 48px;
+    }
+
+    .section-eyebrow {
+      font-size: 0.82rem;
+      font-weight: 700;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      color: var(--primary);
+      margin-bottom: 8px;
+    }
+
+    .section-title {
+      font-size: 2rem;
+      font-weight: 700;
+      letter-spacing: -0.02em;
+      color: var(--text-main);
+      margin-bottom: 12px;
+    }
+
+    .section-desc {
+      font-size: 1rem;
+      color: var(--text-sub);
+    }
+
+    /* 特徴グリッド */
+    .features-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 24px;
+    }
+
+    .feature-card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-lg);
+      padding: 36px 28px;
+      box-shadow: var(--shadow-card);
+      transition: transform 0.2s, box-shadow 0.2s, border-color 0.2s;
+    }
+
+    .feature-card:hover {
+      transform: translateY(-4px);
+      box-shadow: var(--shadow-card-hover);
+      border-color: rgba(2, 132, 199, 0.2);
+    }
+
+    .feature-icon-box {
+      width: 48px;
+      height: 48px;
+      border-radius: 14px;
+      background: #f0f9ff;
+      color: var(--primary);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin-bottom: 20px;
+    }
+
+    .feature-icon-box svg {
+      width: 24px;
+      height: 24px;
+    }
+
+    .feature-card h3 {
+      font-size: 1.15rem;
+      font-weight: 700;
+      letter-spacing: -0.01em;
+      margin-bottom: 10px;
+      color: var(--text-main);
+    }
+
+    .feature-card p {
+      font-size: 0.92rem;
+      color: var(--text-sub);
+      line-height: 1.65;
+    }
+
+    /* プライバシーセクション (Apple風 信頼デザイン) */
+    .privacy-card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-lg);
+      padding: 44px 40px;
+      box-shadow: var(--shadow-card);
+      display: grid;
+      grid-template-columns: 80px 1fr;
+      gap: 32px;
+      align-items: start;
+    }
+
+    .privacy-icon-box {
+      width: 80px;
+      height: 80px;
+      border-radius: 20px;
+      background: #ecfdf5;
+      color: #059669;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .privacy-icon-box svg {
+      width: 40px;
+      height: 40px;
+    }
+
+    .privacy-content h3 {
+      font-size: 1.3rem;
+      font-weight: 700;
+      color: var(--text-main);
+      margin-bottom: 10px;
+    }
+
+    .privacy-content p {
+      font-size: 0.95rem;
+      color: var(--text-sub);
+      line-height: 1.7;
+      margin-bottom: 20px;
+    }
+
+    .privacy-badges {
+      display: flex;
+      gap: 12px;
+      flex-wrap: wrap;
+    }
+
+    .p-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      background: #f3f4f6;
+      padding: 6px 14px;
+      border-radius: var(--radius-full);
+      font-size: 0.82rem;
+      font-weight: 600;
+      color: var(--text-main);
+    }
+
+    .p-badge svg {
+      width: 14px;
+      height: 14px;
+      color: #059669;
+    }
+
+    /* フッター (控えめで洗練されたデザイン) */
+    footer {
+      border-top: 1px solid var(--border);
+      padding: 56px 0 64px;
+      text-align: center;
+      background: #ffffff;
+    }
+
+    .footer-content {
+      max-width: 600px;
+      margin: 0 auto;
+    }
+
+    .footer-brand {
+      font-family: 'Plus Jakarta Sans', sans-serif;
+      font-weight: 700;
+      font-size: 1.1rem;
+      color: var(--text-main);
+      margin-bottom: 8px;
+    }
+
+    .footer-desc {
+      font-size: 0.88rem;
+      color: var(--text-sub);
+      margin-bottom: 18px;
+    }
+
+    .footer-links {
+      display: inline-flex;
+      align-items: center;
+      gap: 16px;
+      margin-bottom: 24px;
+      flex-wrap: wrap;
+      justify-content: center;
+    }
+
+    .footer-links a {
+      color: var(--primary);
+      text-decoration: none;
+      font-size: 0.88rem;
+      font-weight: 600;
+      transition: color 0.15s;
+    }
+
+    .footer-links a:hover {
+      text-decoration: underline;
+      color: var(--primary-hover);
+    }
+
+    .footer-dot {
+      color: var(--border);
+      font-size: 0.8rem;
+    }
+
+    .copyright {
+      font-size: 0.82rem;
+      color: var(--text-light);
+    }
+
+    /* レスポンシブ対応 */
+    @media (max-width: 840px) {
+      h1 { font-size: 2.3rem; }
+      .features-grid { grid-template-columns: 1fr; }
+      .showcase-grid {
+        flex-direction: column;
+        gap: 32px;
+      }
+      .showcase-item.main { transform: none; }
+      .privacy-card {
+        grid-template-columns: 1fr;
+        gap: 20px;
+      }
+      .nav-links { display: none; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- ナビゲーションバー -->
+  <nav class="navbar">
+    <div class="nav-inner">
+      <a href="#" class="nav-brand">
+        <img src="app_icon.png" alt="AutoSquatCounter" class="nav-icon">
+        <span class="nav-title">AutoSquatCounter</span>
+      </a>
+      
+      <div class="nav-actions">
+        <ul class="nav-links">
+          <li><a href="#features" id="nav-features">特徴</a></li>
+          <li><a href="#privacy" id="nav-privacy">プライバシー</a></li>
+          <li><a href="#support" id="nav-support">サポート</a></li>
+        </ul>
+        <div class="lang-switcher">
+          <button class="lang-btn active" id="btn-ja" onclick="setLanguage('ja')">JP</button>
+          <button class="lang-btn" id="btn-en" onclick="setLanguage('en')">EN</button>
+        </div>
+        <a href="https://apps.apple.com/jp/app/id6815116698" id="nav-btn-store" class="nav-btn-mini" target="_blank" rel="noopener">
+          入手
+        </a>
+      </div>
+    </div>
+  </nav>
+
+  <main class="container">
+    <!-- ヒーローセクション -->
+    <header class="hero">
+      <div class="hero-icon-wrap">
+        <a href="https://apps.apple.com/jp/app/id6815116698" id="link-icon" target="_blank" rel="noopener" title="App Store">
+          <img src="app_icon.png" alt="AutoSquatCounter" class="hero-icon">
+        </a>
+      </div>
+
+      <div style="margin-bottom: 20px;">
+        <div class="hero-badge">
+          <!-- ヘルスケア・アクティビティ（心拍・パルス）アイコン -->
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg>
+          <span id="app-tag">iOS ヘルスケア＆フィットネス</span>
+        </div>
+      </div>
+
+      <h1>AutoSquatCounter</h1>
+      <p class="subtitle" id="hero-subtitle">
+        カメラの前に立つだけ。iOS内蔵の検出技術があなたのスクワットを自動でカウントします。<br>
+        「数を数える」作業から解放され、トレーニングに全集中しましょう。
+      </p>
+
+      <!-- App Store 公式風ボタン -->
+      <a href="https://apps.apple.com/jp/app/id6815116698" id="btn-store" class="app-store-button" target="_blank" rel="noopener">
+        <svg viewBox="0 0 24 24">
+          <path d="M18.71 19.5c-.83 1.24-1.71 2.45-3.05 2.47-1.34.03-1.77-.79-3.29-.79-1.53 0-2 .77-3.27.82-1.31.05-2.3-1.32-3.14-2.53C4.25 17 2.94 12.45 4.7 9.39c.87-1.52 2.43-2.48 4.12-2.51 1.28-.02 2.5.87 3.29.87.78 0 2.26-1.07 3.81-.91.65.03 2.47.26 3.64 1.98-.09.06-2.17 1.28-2.15 3.81.03 3.02 2.65 4.03 2.68 4.04-.03.07-.42 1.44-1.38 2.83M15.97 6.85c.66-.82 1.11-1.96.99-3.1-.96.04-2.11.64-2.8 1.44-.6.69-1.13 1.83-.99 2.94 1.07.08 2.15-.49 2.8-1.28z"/>
+        </svg>
+        <div>
+          <span class="btn-text-small" id="btn-store-sub">Download on the</span>
+          <span class="btn-text-large">App Store</span>
+        </div>
+      </a>
+    </header>
+
+    <!-- スクリーンショット・ショーケース -->
+    <div class="showcase">
+      <div class="showcase-grid">
+        <div class="showcase-item">
+          <img src="screenshot_2.jpg" alt="カレンダー・記録画面">
+          <p class="showcase-label" id="sc-label-1">日々の成長を記録</p>
+        </div>
+        <div class="showcase-item main">
+          <img src="screenshot_1.jpg" alt="メインカウント画面">
+          <p class="showcase-label" id="sc-label-2">リアルタイム自動カウント</p>
+        </div>
+        <div class="showcase-item">
+          <img src="screenshot_3.jpg" alt="特徴・設定画面">
+          <p class="showcase-label" id="sc-label-3">直感的でシンプルな操作</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- 主な特徴 -->
+    <section id="features">
+      <div class="section-header">
+        <p class="section-eyebrow" id="features-eyebrow">FEATURES</p>
+        <h2 class="section-title" id="features-title">アプリの特徴</h2>
+        <p class="section-desc" id="features-desc">余計な操作は一切なし。トレーニングの質を高めるためのシンプルな設計。</p>
+      </div>
+
+      <div class="features-grid">
+        <div class="feature-card">
+          <div class="feature-icon-box">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z"/><circle cx="12" cy="13" r="4"/></svg>
+          </div>
+          <h3 id="feat-1-title">カメラで自動カウント</h3>
+          <p id="feat-1-desc">カメラの前に立つだけで自動カウント。端末に触れる必要がなく、ハンズフリーで運動できます。</p>
+        </div>
+
+        <div class="feature-card">
+          <div class="feature-icon-box">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg>
+          </div>
+          <h3 id="feat-2-title">すぐ使える・登録不要</h3>
+          <p id="feat-2-desc">会員登録やログインの手間は一切不要。アプリを起動したその瞬間からすぐにトレーニングを始められます。</p>
+        </div>
+
+        <div class="feature-card">
+          <div class="feature-icon-box">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>
+          </div>
+          <h3 id="feat-3-title">トレーニングに全集中</h3>
+          <p id="feat-3-desc">自分で「今何回目だっけ？」と数える必要がありません。正しいフォームと呼吸に意識を集中できます。</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- プライバシーへの配慮 (Apple審査完全準拠) -->
+    <section id="privacy">
+      <div class="section-header">
+        <p class="section-eyebrow" id="privacy-eyebrow">PRIVACY & SECURITY</p>
+        <h2 class="section-title" id="privacy-title">徹底したプライバシー保護</h2>
+        <p class="section-desc" id="privacy-lead">AutoSquatCounterは、ユーザーのプライバシー保護を最優先に設計されています。</p>
+      </div>
+
+      <div class="privacy-card">
+        <div class="privacy-icon-box">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+        </div>
+        <div class="privacy-content">
+          <h3 id="privacy-box-title">完全端末内処理（オンデバイス）</h3>
+          <p id="privacy-box-desc">
+            カウント処理はすべてiPhoneの端末内でのみリアルタイムに実行されます。カメラの映像や検出データが外部サーバーへ送信されたり、端末内に保存されたりすることは一切ありません（保存期間0秒・第三者共有なし）。
+          </p>
+          <div class="privacy-badges">
+            <span class="p-badge" id="badge-1">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><polyline points="20 6 9 17 4 12"/></svg>
+              カメラ映像の外部送信ゼロ
+            </span>
+            <span class="p-badge" id="badge-2">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><polyline points="20 6 9 17 4 12"/></svg>
+              映像・顔データ保存ゼロ
+            </span>
+            <span class="p-badge" id="badge-3">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><polyline points="20 6 9 17 4 12"/></svg>
+              アカウント登録不要
+            </span>
+          </div>
+          <p id="privacy-note" style="font-size: 0.8rem; color: var(--text-light); margin-top: 14px; margin-bottom: 0;">
+            ※広告表示（Google AdMob）に伴う一般的な通信を除き、運動やカメラに関するデータが外部へ送信されることは一切ありません。
+          </p>
+        </div>
+      </div>
+    </section>
+
+  </main>
+
+  <!-- フッター（控えめで洗練されたサポート＆規約リンク） -->
+  <footer id="support">
+    <div class="container">
+      <div class="footer-content">
+        <p class="footer-brand">AutoSquatCounter</p>
+        <p class="footer-desc" id="footer-desc">
+          お問い合わせや不具合報告、詳細なポリシーは下記よりご確認いただけます。
+        </p>
+        <div class="footer-links">
+          <a href="https://puzzle-brand-61d.notion.site/AutoSquatCounter-3a4ab2a5ad6e8081ace1c3a86e42c8be" target="_blank" rel="noopener" id="link-support">サポート</a>
+          <span class="footer-dot">•</span>
+          <a href="https://puzzle-brand-61d.notion.site/Privacy-Policy-3e4ab2a5ad6e805bbcbee3b3cabc7a18" target="_blank" rel="noopener" id="link-privacy">プライバシーポリシー</a>
+        </div>
+        <p class="copyright">&copy; 2026 Hashimotochans. All rights reserved.</p>
+      </div>
+    </div>
+  </footer>
+
+  <script>
+    const translations = {
+      ja: {
+        metaTitle: "AutoSquatCounter - カメラで自動スクワットカウント",
+        storeUrl: "https://apps.apple.com/jp/app/id6815116698",
+        navFeatures: "特徴",
+        navPrivacy: "プライバシー",
+        navSupport: "サポート",
+        navGet: "入手",
+        appTag: "iOS ヘルスケア＆フィットネス",
+        heroSubtitle: "カメラの前に立つだけ。iOS内蔵の検出技術があなたのスクワットを自動でカウントします。<br>「数を数える」作業から解放され、トレーニングに全集中しましょう。",
+        btnSub: "Download on the",
+        scLabel1: "日々の成長を記録",
+        scLabel2: "リアルタイム自動カウント",
+        scLabel3: "直感的でシンプルな操作",
+        featuresEyebrow: "FEATURES",
+        featuresTitle: "アプリの特徴",
+        featuresDesc: "余計な操作は一切なし。トレーニングの質を高めるためのシンプルな設計。",
+        feat1Title: "カメラで自動カウント",
+        feat1Desc: "カメラの前に立つだけで自動カウント。端末に触れる必要がなく、ハンズフリーで運動できます。",
+        feat2Title: "すぐ使える・登録不要",
+        feat2Desc: "会員登録やログインの手間は一切不要。アプリを起動したその瞬間からすぐにトレーニングを始められます。",
+        feat3Title: "トレーニングに全集中",
+        feat3Desc: "自分で「今何回目だっけ？」と数える必要がありません。正しいフォームと呼吸に意識を集中できます。",
+        privacyEyebrow: "PRIVACY & SECURITY",
+        privacyTitle: "徹底したプライバシー保護",
+        privacyLead: "AutoSquatCounterは、ユーザーのプライバシー保護を最優先に設計されています。",
+        privacyBoxTitle: "完全端末内処理（オンデバイス）",
+        privacyBoxDesc: "カウント処理はすべてiPhoneの端末内でのみリアルタイムに実行されます。カメラの映像や検出データが外部サーバーへ送信されたり、端末内に保存されたりすることは一切ありません（保存期間0秒・第三者共有なし）。",
+        badge1: "カメラ映像の外部送信ゼロ",
+        badge2: "映像・顔データ保存ゼロ",
+        badge3: "アカウント登録不要",
+        privacyNote: "※広告表示（Google AdMob）に伴う一般的な通信を除き、運動やカメラに関するデータが外部へ送信されることは一切ありません。",
+        footerDesc: "お問い合わせや不具合報告、詳細なポリシーは下記よりご確認いただけます。",
+        linkSupport: "サポート",
+        linkPrivacy: "プライバシーポリシー"
+      },
+      en: {
+        metaTitle: "AutoSquatCounter - Automatic Squat Counter with Camera",
+        storeUrl: "https://apps.apple.com/us/app/id6815116698",
+        navFeatures: "Features",
+        navPrivacy: "Privacy",
+        navSupport: "Support",
+        navGet: "Get",
+        appTag: "iOS Health & Fitness",
+        heroSubtitle: "Simply stand in front of your camera. Built-in iOS detection automatically counts your squats.<br>Free yourself from counting and focus entirely on your workout.",
+        btnSub: "Download on the",
+        scLabel1: "Track Your Progress",
+        scLabel2: "Real-Time Auto Counting",
+        scLabel3: "Clean & Intuitive Design",
+        featuresEyebrow: "FEATURES",
+        featuresTitle: "Key Features",
+        featuresDesc: "Zero friction. A focused design created purely to elevate your training quality.",
+        feat1Title: "Auto Camera Counting",
+        feat1Desc: "Counts automatically just by standing in front of the camera. Completely hands-free exercise.",
+        feat2Title: "Instant Start, No Sign-Up",
+        feat2Desc: "No registration or account required. Start your workout session the second you open the app.",
+        feat3Title: "Total Focus on Form",
+        feat3Desc: "Never lose track of reps again. Direct your full energy toward your posture and breathing.",
+        privacyEyebrow: "PRIVACY & SECURITY",
+        privacyTitle: "Privacy by Design",
+        privacyLead: "AutoSquatCounter is built with user privacy as the foremost fundamental principle.",
+        privacyBoxTitle: "100% On-Device Processing",
+        privacyBoxDesc: "All detection is computed strictly on your iPhone in real time. Camera video and face data are never sent to external servers or stored on device (0-sec retention, zero third-party sharing).",
+        badge1: "Zero Camera Video Transmission",
+        badge2: "Zero Video/Face Storage",
+        badge3: "No Account Required",
+        privacyNote: "*Except for standard network communication for ads (Google AdMob), no camera footage or workout data is transmitted to external servers.",
+        footerDesc: "For user support, bug reports, and legal policies, please visit the links below.",
+        linkSupport: "Support",
+        linkPrivacy: "Privacy Policy"
+      }
+    };
+
+    function setLanguage(lang) {
+      const t = translations[lang];
+      if (!t) return;
+
+      document.getElementById('meta-title').innerText = t.metaTitle;
+      document.getElementById('nav-features').innerText = t.navFeatures;
+      document.getElementById('nav-privacy').innerText = t.navPrivacy;
+      document.getElementById('nav-support').innerText = t.navSupport;
+      document.getElementById('nav-btn-store').innerText = t.navGet;
+      document.getElementById('nav-btn-store').href = t.storeUrl;
+      document.getElementById('app-tag').innerText = t.appTag;
+      document.getElementById('hero-subtitle').innerHTML = t.heroSubtitle;
+      document.getElementById('btn-store').href = t.storeUrl;
+      document.getElementById('link-icon').href = t.storeUrl;
+      document.getElementById('btn-store-sub').innerText = t.btnSub;
+
+      document.getElementById('sc-label-1').innerText = t.scLabel1;
+      document.getElementById('sc-label-2').innerText = t.scLabel2;
+      document.getElementById('sc-label-3').innerText = t.scLabel3;
+
+      document.getElementById('features-eyebrow').innerText = t.featuresEyebrow;
+      document.getElementById('features-title').innerText = t.featuresTitle;
+      document.getElementById('features-desc').innerText = t.featuresDesc;
+      document.getElementById('feat-1-title').innerText = t.feat1Title;
+      document.getElementById('feat-1-desc').innerText = t.feat1Desc;
+      document.getElementById('feat-2-title').innerText = t.feat2Title;
+      document.getElementById('feat-2-desc').innerText = t.feat2Desc;
+      document.getElementById('feat-3-title').innerText = t.feat3Title;
+      document.getElementById('feat-3-desc').innerText = t.feat3Desc;
+
+      document.getElementById('privacy-eyebrow').innerText = t.privacyEyebrow;
+      document.getElementById('privacy-title').innerText = t.privacyTitle;
+      document.getElementById('privacy-lead').innerText = t.privacyLead;
+      document.getElementById('privacy-box-title').innerText = t.privacyBoxTitle;
+      document.getElementById('privacy-box-desc').innerText = t.privacyBoxDesc;
+      document.getElementById('badge-1').innerHTML = `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><polyline points="20 6 9 17 4 12"/></svg> ${t.badge1}`;
+      document.getElementById('badge-2').innerHTML = `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><polyline points="20 6 9 17 4 12"/></svg> ${t.badge2}`;
+      document.getElementById('badge-3').innerHTML = `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><polyline points="20 6 9 17 4 12"/></svg> ${t.badge3}`;
+      document.getElementById('privacy-note').innerText = t.privacyNote;
+
+      document.getElementById('footer-desc').innerText = t.footerDesc;
+      document.getElementById('link-support').innerText = t.linkSupport;
+      document.getElementById('link-privacy').innerText = t.linkPrivacy;
+
+      document.getElementById('btn-ja').classList.toggle('active', lang === 'ja');
+      document.getElementById('btn-en').classList.toggle('active', lang === 'en');
+      document.documentElement.lang = lang;
+    }
+
+    window.addEventListener('DOMContentLoaded', () => {
+      const userLang = navigator.language || navigator.userLanguage;
+      if (userLang && !userLang.startsWith('ja')) {
+        setLanguage('en');
+      } else {
+        setLanguage('ja');
+      }
+    });
+  </script>
+</body>
+</html>
